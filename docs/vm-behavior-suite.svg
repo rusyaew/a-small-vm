@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1264" height="863" viewBox="0 0 1264 863" role="img" aria-label="VmBehaviorSuite terminal output">
+<rect width="1264" height="863" fill="#171b22"/>
+<style>text { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; font-size: 22px; dominant-baseline: alphabetic; white-space: pre; }</style>
+<text x="4" y="34" fill="#e6edf3" xml:space="preserve">[info] done compiling</text>
+<text x="4" y="72" fill="#6fbe44" xml:space="preserve">VmBehaviorSuite:</text>
+<text x="4" y="110" xml:space="preserve"><tspan fill="#6fbe44">  + output trace: literal outputs can be mixed with register-based outputs</tspan><tspan fill="#727884" dx="0.6ch"> 0.03s</tspan></text>
+<text x="4" y="148" xml:space="preserve"><tspan fill="#6fbe44">  + output trace: division/output loop from the brief drains X to zero</tspan><tspan fill="#727884" dx="0.6ch"> 0.004s</tspan></text>
+<text x="4" y="186" xml:space="preserve"><tspan fill="#6fbe44">  + output trace: provided starting state 1</tspan><tspan fill="#727884" dx="0.6ch"> 0.001s</tspan></text>
+<text x="4" y="224" xml:space="preserve"><tspan fill="#6fbe44">  + output trace: provided starting state 2</tspan><tspan fill="#727884" dx="0.6ch"> 0.001s</tspan></text>
+<text x="4" y="262" xml:space="preserve"><tspan fill="#6fbe44">  + yst can read register-backed combo operands</tspan><tspan fill="#727884" dx="0.6ch"> 0.001s</tspan></text>
+<text x="4" y="300" xml:space="preserve"><tspan fill="#6fbe44">  + yxl xors Y with a literal operand</tspan><tspan fill="#727884" dx="0.6ch"> 0.002s</tspan></text>
+<text x="4" y="338" xml:space="preserve"><tspan fill="#6fbe44">  + yxz ignores its operand and xors Y with Z</tspan><tspan fill="#727884" dx="0.6ch"> 0.002s</tspan></text>
+<text x="4" y="376" xml:space="preserve"><tspan fill="#6fbe44">  + ydv uses X as the numerator, not the old value of Y</tspan><tspan fill="#727884" dx="0.6ch"> 0.001s</tspan></text>
+<text x="4" y="414" xml:space="preserve"><tspan fill="#6fbe44">  + jnz jumps to the literal operand when X is non-zero</tspan><tspan fill="#727884" dx="0.6ch"> 0.001s</tspan></text>
+<text x="4" y="452" xml:space="preserve"><tspan fill="#6fbe44">  + combo operand 7 is rejected for combo-based instructions</tspan><tspan fill="#727884" dx="0.6ch"> 0.002s</tspan></text>
+<text x="4" y="490" xml:space="preserve"><tspan fill="#6fbe44">  + literal operand 7 remains valid where literals are expected</tspan><tspan fill="#727884" dx="0.6ch"> 0.001s</tspan></text>
+<text x="4" y="528" xml:space="preserve"><tspan fill="#6fbe44">  + parsing rejects non-numeric tokens</tspan><tspan fill="#727884" dx="0.6ch"> 0.001s</tspan></text>
+<text x="4" y="566" xml:space="preserve"><tspan fill="#6fbe44">  + parsing rejects numbers outside the 3-bit range</tspan><tspan fill="#727884" dx="0.6ch"> 0.002s</tspan></text>
+<text x="4" y="604" xml:space="preserve"><tspan fill="#6fbe44">  + a trailing orphan opcode halts instead of failing</tspan><tspan fill="#727884" dx="0.6ch"> 0.001s</tspan></text>
+<text x="4" y="642" xml:space="preserve"><tspan fill="#6fbe44">  + negative division exponents surface as execute errors</tspan><tspan fill="#727884" dx="0.6ch"> 0.002s</tspan></text>
+<text x="4" y="680" xml:space="preserve"><tspan fill="#6fbe44">  + negative instruction pointers surface as fetch errors</tspan><tspan fill="#727884" dx="0.6ch"> 0.001s</tspan></text>
+<text x="4" y="718" fill="#e6edf3" xml:space="preserve">[info] Passed: Total 16, Failed 0, Errors 0, Passed 16</text>
+<text x="4" y="756" xml:space="preserve"><tspan fill="#6fbe44">[success]</tspan><tspan fill="#e6edf3"> Total time: 11 s, completed Mar 14, 2026, 6:58:11 PM</tspan></text>
+<text x="4" y="794" fill="#e6edf3" xml:space="preserve">[IJ]</text>
+<text x="4" y="870" fill="#e6edf3" xml:space="preserve">&gt; </text>
+<rect x="33" y="846" width="3" height="30" fill="#e6edf3" rx="1"/>
+</svg>

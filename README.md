@@ -48,3 +48,32 @@ Example diagnostic card:
 ╰──────────────────────────────────────────────────────────────╯
 ```
 
+### Style and linting
+
+This repo uses `Scalafmt` for formatting and `Scalafix` for linting.
+Local commands:
+
+```bash
+sbt fmt
+sbt fmtCheck
+sbt lint
+sbt lintCheck
+sbt styleCheck
+```
+
+In order to simulate a real production environment, after initial commit to my branch `dev/nika` I ran:
+
+```bash
+sbt -batch compile Test/compile scalafixAll scalafmtAll scalafmtSbt
+```
+
+And to simulate  results of CI on merges from `dev/nika` to `main`, I locally ran CI tests before making a pull request to `main`:
+
+```bash
+sbt -batch scalafmtCheckAll scalafmtSbtCheck compile Test/compile "scalafixAll --check" test
+```
+
+### CI
+
+To mimic production environment, GitHub Actions runs style and test checks on pull requests into `main` and on
+pushes to `main`.
