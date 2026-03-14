@@ -31,13 +31,8 @@ object ThreeBitWord:
       case _ => Left(ParseError.ParseTokenNotThreeBit(n))
 
 type ValidComboWord =
-  ThreeBitWord.W0.type |
-  ThreeBitWord.W1.type |
-  ThreeBitWord.W2.type |
-  ThreeBitWord.W3.type |
-  ThreeBitWord.W4.type |
-  ThreeBitWord.W5.type |
-  ThreeBitWord.W6.type
+  ThreeBitWord.W0.type | ThreeBitWord.W1.type | ThreeBitWord.W2.type | ThreeBitWord.W3.type |
+    ThreeBitWord.W4.type | ThreeBitWord.W5.type | ThreeBitWord.W6.type
 
 opaque type Operand[K <: OperandKind, W <: ThreeBitWord] <: W = W
 
@@ -47,9 +42,6 @@ object Operand:
 
   def combo[W <: ValidComboWord](word: W): Operand[ComboKind, W] =
     word
-
-  private def literalWord(operand: Operand[LiteralKind, ThreeBitWord]): ThreeBitWord =
-    operand
 
   private def comboWord(operand: Operand[ComboKind, ValidComboWord]): ValidComboWord =
     operand
@@ -68,8 +60,8 @@ object Operand:
 type LiteralOperand[W <: ThreeBitWord] = Operand[LiteralKind, W]
 type ComboOperand[W <: ValidComboWord] = Operand[ComboKind, W]
 
-type AnyLiteralOperand  = Operand[LiteralKind, ThreeBitWord]
-type AnyComboOperand    = Operand[ComboKind, ValidComboWord]
+type AnyLiteralOperand = Operand[LiteralKind, ThreeBitWord]
+type AnyComboOperand = Operand[ComboKind, ValidComboWord]
 
 object LiteralOperand:
   def fromWord(word: ThreeBitWord): AnyLiteralOperand =
@@ -114,24 +106,25 @@ object Opcode:
       case ThreeBitWord.W7 => Opcode.Zdv
 
 enum Instruction:
-  case Xdv(operand: AnyComboOperand)      // X := trunc(X / 2^combo)
-  case Yxl(operand: AnyLiteralOperand)    // Y := Y xor literal
-  case Yst(operand: AnyComboOperand)      // Y := combo mod 8
-  case Jnz(operand: AnyLiteralOperand)    // if X != 0 then ip := literal
-  case Yxz(ignored: AnyLiteralOperand)    // Y := Y xor Z; operand is ignored
-  case Out(operand: AnyComboOperand)      // output combo mod 8
-  case Ydv(operand: AnyComboOperand)      // Y := trunc(X / 2^combo)
-  case Zdv(operand: AnyComboOperand)      // Z := trunc(X / 2^combo)
+  case Xdv(operand: AnyComboOperand) // X := trunc(X / 2^combo)
+  case Yxl(operand: AnyLiteralOperand) // Y := Y xor literal
+  case Yst(operand: AnyComboOperand) // Y := combo mod 8
+  case Jnz(operand: AnyLiteralOperand) // if X != 0 then ip := literal
+  case Yxz(ignored: AnyLiteralOperand) // Y := Y xor Z; operand is ignored
+  case Out(operand: AnyComboOperand) // output combo mod 8
+  case Ydv(operand: AnyComboOperand) // Y := trunc(X / 2^combo)
+  case Zdv(operand: AnyComboOperand) // Z := trunc(X / 2^combo)
 
 object Instruction:
-  private def lit(operand: ThreeBitWord)
-                 (mk: AnyLiteralOperand => Instruction): DecodeResult[Instruction] =
-                  Right(mk(LiteralOperand.fromWord(operand)))
+  private def lit(operand: ThreeBitWord)(
+      mk: AnyLiteralOperand => Instruction
+  ): DecodeResult[Instruction] =
+    Right(mk(LiteralOperand.fromWord(operand)))
 
-  private def combo(operand: ThreeBitWord)
-                   (mk: AnyComboOperand => Instruction): DecodeResult[Instruction] =
-                    ComboOperand.fromWord(operand).map(mk)
-
+  private def combo(operand: ThreeBitWord)(
+      mk: AnyComboOperand => Instruction
+  ): DecodeResult[Instruction] =
+    ComboOperand.fromWord(operand).map(mk)
 
   def decode(opcode: ThreeBitWord, operand: ThreeBitWord): DecodeResult[Instruction] =
     Opcode.fromWord(opcode) match

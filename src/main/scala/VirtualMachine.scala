@@ -1,13 +1,14 @@
 import scala.annotation.tailrec
-import ComboOperand.*
+
+import ComboOperand._
 
 final case class VMState(
-                        x: Long,
-                        y: Long,
-                        z: Long,
-                        ip: Int = 0,
-                        output: Vector[Int] = Vector.empty
-                        )
+    x: Long,
+    y: Long,
+    z: Long,
+    ip: Int = 0,
+    output: Vector[Int] = Vector.empty
+)
 
 object VMState:
   def initial(x: Long, y: Long, z: Long): VMState =
@@ -30,16 +31,18 @@ object VMInstructionInterpreter:
     Math.floorMod(value, 8L).toInt
 
   private def divideByPowerOfTwo(numerator: Long, exponent: Long): ExecutionResult[Long] =
-    if exponent < 0 then
-      Left(ExecuteError.NegativeExponent(exponent))
-    else if exponent < 63 then
-      Right(numerator / (1L << exponent.toInt))
+    if exponent < 0 then Left(ExecuteError.NegativeExponent(exponent))
+    else if exponent < 63 then Right(numerator / (1L << exponent.toInt))
     else if exponent == 63 then
-      Right(if numerator == Long.MinValue then -1L else 0L) // since Long is asymmetric, range -2^63...2^63-1
-    else
-      Right(0L)
+      Right(
+        if numerator == Long.MinValue then -1L else 0L
+      ) // since Long is asymmetric, range -2^63...2^63-1
+    else Right(0L)
 
-  def applyInstructionToState(instruction: Instruction, state: VMState): ExecutionResult[StepResult] =
+  def applyInstructionToState(
+      instruction: Instruction,
+      state: VMState
+  ): ExecutionResult[StepResult] =
     instruction match
       case Instruction.Xdv(operand) =>
         divideByPowerOfTwo(
@@ -66,43 +69,60 @@ object VMInstructionInterpreter:
         }
 
       case Instruction.Yxl(operand) =>
-        Right(StepResult.Continue(
+        Right(
+          StepResult.Continue(
             state.copy(
               y = state.y ^ operand.toInt.toLong,
               ip = state.ip + 2
-        )))
+            )
+          )
+        )
 
       case Instruction.Yst(operand) =>
-        Right(StepResult.Continue(state.copy(
-          y = remainderMod8(operand.interpretInContext(state.x, state.y, state.z)).toLong,
-          ip = state.ip + 2
-        )))
+        Right(
+          StepResult.Continue(
+            state.copy(
+              y = remainderMod8(operand.interpretInContext(state.x, state.y, state.z)).toLong,
+              ip = state.ip + 2
+            )
+          )
+        )
 
       case Instruction.Jnz(operand) =>
-        Right(StepResult.Continue(state.copy(
-          ip = if state.x == 0 then state.ip + 2 else operand.toInt
-        )))
+        Right(
+          StepResult.Continue(
+            state.copy(
+              ip = if state.x == 0 then state.ip + 2 else operand.toInt
+            )
+          )
+        )
 
       case Instruction.Yxz(_) =>
-        Right(StepResult.Continue(state.copy(
-          y = state.y ^ state.z,
-          ip = state.ip + 2
-        )))
+        Right(
+          StepResult.Continue(
+            state.copy(
+              y = state.y ^ state.z,
+              ip = state.ip + 2
+            )
+          )
+        )
 
       case Instruction.Out(operand) =>
-        Right(StepResult.Continue(state.copy(
-          ip = state.ip + 2,
-          output = state.output :+ remainderMod8(
-            operand.interpretInContext(state.x, state.y, state.z)
+        Right(
+          StepResult.Continue(
+            state.copy(
+              ip = state.ip + 2,
+              output = state.output :+ remainderMod8(
+                operand.interpretInContext(state.x, state.y, state.z)
+              )
+            )
           )
-        )))
+        )
 
 final case class VirtualMachine(program: Vector[ThreeBitWord]):
   private def fetchInstruction(state: VMState): FetchPhaseResult[FetchResult] =
-    if state.ip < 0 then
-      Left(FetchError.InvalidInstructionPointer(state.ip))
-    else if state.ip + 1 >= program.length then
-      Right(FetchResult.Halt)
+    if state.ip < 0 then Left(FetchError.InvalidInstructionPointer(state.ip))
+    else if state.ip + 1 >= program.length then Right(FetchResult.Halt)
     else
       val opcodeWord = program(state.ip)
       val operandWord = program(state.ip + 1)
@@ -110,15 +130,13 @@ final case class VirtualMachine(program: Vector[ThreeBitWord]):
       Instruction
         .decode(opcodeWord, operandWord)
         .left
-        .map({
-          case DecodeError.InvalidComboOperand(operand) =>
-            FetchError.InvalidComboOperand(state.ip, operand)
+        .map({ case DecodeError.InvalidComboOperand(operand) =>
+          FetchError.InvalidComboOperand(state.ip, operand)
         })
         .map(FetchResult.Decoded.apply)
 
   def step(state: VMState): VmResult[StepResult] =
-    fetchInstruction(state)
-      .left
+    fetchInstruction(state).left
       .map(VmError.Fetch.apply)
       .flatMap {
         case FetchResult.Halt =>
@@ -134,9 +152,9 @@ final case class VirtualMachine(program: Vector[ThreeBitWord]):
   @tailrec
   final def run(state: VMState): VmResult[VMState] =
     step(state) match
-      case Left(error)                            => Left(error)
-      case Right(StepResult.Halt(finalState))     => Right(finalState)
-      case Right(StepResult.Continue(nextState))  => run(nextState)
+      case Left(error)                           => Left(error)
+      case Right(StepResult.Halt(finalState))    => Right(finalState)
+      case Right(StepResult.Continue(nextState)) => run(nextState)
 
 object VirtualMachine:
   def load(program: Vector[ThreeBitWord]): VirtualMachine =

@@ -1,9 +1,9 @@
 final case class DemoCase(
-                           title: String,
-                           initialState: VMState,
-                           programText: String,
-                           expectedOutput: String
-                         )
+    title: String,
+    initialState: VMState,
+    programText: String,
+    expectedOutput: String
+)
 
 object Main:
 

@@ -21,7 +21,9 @@ enum FetchError:
         s"Invalid combo operand at ip=$ip: $operand"
 
 enum ExecuteError:
-  case NegativeExponent(exponent: Long) // we could interpret X/2^(-k) as X * 2^k, but it's a stretch from specification
+  case NegativeExponent(
+      exponent: Long
+  ) // we could interpret X/2^(-k) as X * 2^k, but it's a stretch from specification
 
   def message: String =
     this match
@@ -41,4 +43,3 @@ type ParseResult[A] = Either[ParseError, A]
 type FetchPhaseResult[A] = Either[FetchError, A]
 type ExecutionResult[A] = Either[ExecuteError, A]
 type VmResult[A] = Either[VmError, A]
-

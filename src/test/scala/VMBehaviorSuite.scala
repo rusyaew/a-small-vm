@@ -1,13 +1,13 @@
 import munit.FunSuite
 
 final case class OutputScenario(
-                                 label: String,
-                                 programText: String,
-                                 x: Long,
-                                 y: Long,
-                                 z: Long,
-                                 expectedOutput: String
-                               )
+    label: String,
+    programText: String,
+    x: Long,
+    y: Long,
+    z: Long,
+    expectedOutput: String
+)
 
 class VmBehaviorSuite extends FunSuite:
 
@@ -17,11 +17,11 @@ class VmBehaviorSuite extends FunSuite:
       case Right(program)   => program
 
   private def runChecked(
-                          text: String,
-                          x: Long = 0L,
-                          y: Long = 0L,
-                          z: Long = 0L
-                        ): VmResult[VMState] =
+      text: String,
+      x: Long = 0L,
+      y: Long = 0L,
+      z: Long = 0L
+  ): VmResult[VMState] =
     VirtualMachine
       .load(parseOrFail(text))
       .run(VMState.initial(x, y, z))
@@ -36,17 +36,16 @@ class VmBehaviorSuite extends FunSuite:
     sys.props.get("vm.pretty").contains("true")
 
   private def assertWithVmContext[A](
-                                      label: String,
-                                      programText: String,
-                                      obtained: A,
-                                      expected: A,
-                                      x: Long = 0L,
-                                      y: Long = 0L,
-                                      z: Long = 0L,
-                                      note: Option[String] = None
-                                    ): Unit =
-    if obtained == expected then
-      ()
+      label: String,
+      programText: String,
+      obtained: A,
+      expected: A,
+      x: Long = 0L,
+      y: Long = 0L,
+      z: Long = 0L,
+      note: Option[String] = None
+  ): Unit =
+    if obtained == expected then ()
     else if prettyFailuresEnabled then
       fail(
         VmPresentation.renderFailureCard(
@@ -60,8 +59,7 @@ class VmBehaviorSuite extends FunSuite:
           note = note
         )
       )
-    else
-      assertEquals(obtained, expected)
+    else assertEquals(obtained, expected)
 
   private val outputScenarios = Vector(
     OutputScenario(

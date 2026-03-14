@@ -1,12 +1,12 @@
 /** Layer 2: presentation-only rendering for the runnable demo.
- *
- * This is not part of the VM semantics
- *
- * Its only role is to render already-computed results in a readable
- * boxed format for the command-line demo and tests with `sbt test -Dvm.pretty=true`
- * It's basically written to show good-looking clear traces on failure like in
- * certain gdb extensions (I was mostly inspired by them when I made this)
- */
+  *
+  * This is not part of the VM semantics
+  *
+  * Its only role is to render already-computed results in a readable boxed format for the
+  * command-line demo and tests with `sbt test -Dvm.pretty=true` It's basically written to show
+  * good-looking clear traces on failure like in certain gdb extensions (I was mostly inspired by
+  * them when I made this)
+  */
 
 object VmPresentation:
 
@@ -41,9 +41,9 @@ object VmPresentation:
       case Instruction.Zdv(operand) => s"Zdv(${renderComboOperand(operand)})"
 
   def instructionPreview(
-                          program: Vector[ThreeBitWord],
-                          maxInstructions: Int = 3
-                        ): String =
+      program: Vector[ThreeBitWord],
+      maxInstructions: Int = 3
+  ): String =
     val preview =
       program
         .grouped(2)
@@ -83,11 +83,11 @@ object VmPresentation:
     (Vector(top, row(title), divider) ++ bodyLines.map(row) :+ bottom).mkString("\n")
 
   private def renderProgramSummary(
-                                    programText: String,
-                                    x: Long,
-                                    y: Long,
-                                    z: Long
-                                  ): Vector[String] =
+      programText: String,
+      x: Long,
+      y: Long,
+      z: Long
+  ): Vector[String] =
     BytecodeParser.parseWords(programText) match
       case Left(parseError) =>
         Vector(
@@ -104,15 +104,15 @@ object VmPresentation:
         )
 
   def renderFailureCard(
-                         label: String,
-                         programText: String,
-                         expected: Any,
-                         obtained: Any,
-                         x: Long = 0L,
-                         y: Long = 0L,
-                         z: Long = 0L,
-                         note: Option[String] = None
-                       ): String =
+      label: String,
+      programText: String,
+      expected: Any,
+      obtained: Any,
+      x: Long = 0L,
+      y: Long = 0L,
+      z: Long = 0L,
+      note: Option[String] = None
+  ): String =
     val noteLines =
       note match
         case Some(text) => Vector(s"note   : $text")
@@ -120,13 +120,12 @@ object VmPresentation:
 
     boxed(
       title = s"Failure: $label",
-      bodyLines =
-        renderProgramSummary(programText, x, y, z) ++
-          Vector(
-            s"expect : $expected",
-            s"got    : $obtained"
-          ) ++
-          noteLines
+      bodyLines = renderProgramSummary(programText, x, y, z) ++
+        Vector(
+          s"expect : $expected",
+          s"got    : $obtained"
+        ) ++
+        noteLines
     )
 
   def renderDemoCase(example: DemoCase): String =
